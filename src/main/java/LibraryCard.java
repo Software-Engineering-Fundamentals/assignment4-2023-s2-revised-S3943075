@@ -94,12 +94,47 @@ public class LibraryCard {
      * @return true if the book is successfully borrowed, false otherwise
      */
 
-    public boolean issueBook(Book book){
-    	return false;
-   
+     public boolean issueBook(Book book) throws IllegalBookIssueException{
+        // Get the number of books borrowed by the student on the library card
+        int numberOfBooksBorrowed = getBooks().size();
+    
+        // Check if the number of books borrowed is not greater than or equal to 4
+        if (numberOfBooksBorrowed >= 4) {
+            return false;
+        }
+    
+        // Check if the same book is already issued on the library card
+        if (getBooks().contains(book)) {
+            throw new IllegalBookIssueException("The same book is already issued on the library card");
+        }
+    
+        // Check that the library card is still valid
+        Date currentDate = new Date();
+        if (currentDate.after(getExpiryDate())) {
+            // Library card is expired
+            return false;
+        }
+    
+        // Check that the book is available for borrowing
+        if (!book.getStatus()) {
+            // Book is not available
+            return false;
+        }
+    
+        // The book should not be issued if there is a pending fine associated with the library card
+        if (getFine() > 0) {
+            return false;
+        }
+    
+        // If the above constraints are met, then issue the book to the student
+        int borrowingDays = (book.getDemand() == 1) ? 3 : 15;
+        book.setDays(borrowingDays);
+        getBooks().add(book);
+    
+        // Return true to indicate successful book issuance
+        return true;
     }
 
 
 
 }
-// COmment
