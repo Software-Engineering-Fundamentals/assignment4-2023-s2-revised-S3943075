@@ -95,6 +95,7 @@ public class LibraryCard {
      */
 
      public boolean issueBook(Book book) throws IllegalBookIssueException{
+
         // Get the number of books borrowed by the student on the library card
         int numberOfBooksBorrowed = getBooks().size();
     
